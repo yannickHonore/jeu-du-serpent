@@ -133,6 +133,27 @@ function positionBouffe(){
 positionBouffe();
 
 /**
+ * Fonction permetant de vérifier si on va sur le serpent
+ * @param {position en x} x 
+ * @param {position en y} y 
+ * @param {tableau de position à vérifier} aVerifier 
+ * @returns Retourne un boolean (true) s'il y a colition
+ */
+function verifColitionSerpent(x, y, aVerifier){
+    let valid = false;
+    let result = [];
+    for(let i = 0; i < aVerifier.length; i++){
+        if(aVerifier[i].x == x && aVerifier[i].y == y){
+            result.push(false);
+        }
+    }
+
+    valid = result.includes(false);
+    return valid;
+}
+
+
+/**
  * Fonction permetant de déplacer le serpent
  * @param {Valeur de la touche enfoncé} cle 
  */
@@ -140,36 +161,41 @@ function deplacer(cle){
     let left = serpent[serpent.length - 1].x;
     let top = serpent[serpent.length - 1].y;
     let tempDiv = serpent[0].laDiv;
-    let deplacer = false;
+    let colition;
+    let possible = false;
     
     switch(cle){
         case "ArrowLeft":
             if(serpent[serpent.length - 1].x > 0){
                 left = serpent[serpent.length - 1].x - taille;
-                deplacer = true;
+                colition = verifColitionSerpent(left, top, serpent);
+                possible = true;
             }
             break;
         case "ArrowUp":
             if(serpent[serpent.length - 1].y > 0){
                 top = serpent[serpent.length - 1].y - taille;
-                deplacer = true;
+                colition = verifColitionSerpent(left, top, serpent);
+                possible = true;
             }
             break;
         case "ArrowRight":
             if((serpent[serpent.length - 1].x + (taille * 2)) < txContainer){
                 left = serpent[serpent.length - 1].x + taille;
-                deplacer = true;
+                colition = verifColitionSerpent(left, top, serpent);
+                possible = true;
             }
             break;
         case "ArrowDown":
             if((serpent[serpent.length - 1].y + (taille * 2)) < tyContainer){
                 top = serpent[serpent.length - 1].y + taille;
-                deplacer = true;
+                colition = verifColitionSerpent(left, top, serpent);
+                possible = true;
             }
             break;
     }
     
-    if(deplacer){
+    if(!colition && possible){
         serpent.push({x: left, y: top, laDiv: tempDiv});
         serpent.shift();
 
