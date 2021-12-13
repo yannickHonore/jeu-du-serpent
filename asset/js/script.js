@@ -1,7 +1,6 @@
 const container = document.getElementById("container");
 let txContainer = container.offsetWidth;
 let tyContainer = container.offsetHeight;
-const bouffe = document.getElementById("bouffe");
 const taille = 50;
 let score = -1;
 let serpent = [];
@@ -23,19 +22,23 @@ afficherScore();
  * @param {taille actuel du serpent en nombre de block} nbSerpent 
  * @returns retourne l'objet créé
  */
-function creationDiv(nbSerpent){
+function creationDiv(id, longueur){
     let maDiv = document.createElement("div");
     maDiv.classList.add("serpent");
-    maDiv.id = `serpent_${nbSerpent}`;
+    maDiv.style.width = taille + "px";
+    maDiv.style.height = taille + "px";
+    maDiv.id = id+longueur;
     return maDiv;
 }
 
+container.appendChild(creationDiv("bouffe",""));
+const bouffe = document.getElementById("bouffe");
 /**
  * Fonction permetant d'ajouter une case au serpent
  */
 function ajoutSerpent(direction){
     // On crée la div
-    let maDiv = creationDiv(serpent.length);
+    let maDiv = creationDiv("serpent_", serpent.length);
     let x = 0;
     let y = 0;
 
@@ -95,42 +98,10 @@ function nombreAleatoire(maxi){
     do{
         nombre = Math.floor(Math.random() * maxi);
         nombre = Math.floor(nombre / taille);
-        nombre = nombre * 50;
+        nombre = nombre * taille;
     }while(nombre + taille > maxi);
     return nombre;
 }
-
-/**
- * Fonction permetant de créer une position aléatoire de bouffe
- */
-function positionBouffe(){
-    let nok = [false];
-    let x = 0;
-    let y = 0;
-    do{
-        x = nombreAleatoire(txContainer);
-        y = nombreAleatoire(tyContainer);
-
-        for(let i = 0; i < serpent.length; i++){
-            if(serpent[i].x != x && serpent[i].y != y){
-                nok.push(true);
-            }
-        }
-
-    }while(!nok.includes(true));
-    
-    let position = {
-        x: x,
-        y: y,
-    };
-
-    posiBouffe = position;
-    bouffe.style.left = x + "px";
-    bouffe.style.top = y + "px";
-}
-
-// On positionne une premiere fois la bouffe
-positionBouffe();
 
 /**
  * Fonction permetant de vérifier si on va sur le serpent
@@ -139,7 +110,7 @@ positionBouffe();
  * @param {tableau de position à vérifier} aVerifier 
  * @returns Retourne un boolean (true) s'il y a colition
  */
-function verifColitionSerpent(x, y, aVerifier){
+ function verifColitionSerpent(x, y, aVerifier){
     let valid = false;
     let result = [];
     for(let i = 0; i < aVerifier.length; i++){
@@ -151,6 +122,43 @@ function verifColitionSerpent(x, y, aVerifier){
     valid = result.includes(false);
     return valid;
 }
+
+/**
+ * Fonction permetant de créer une position aléatoire de bouffe
+ */
+function positionBouffe(){
+    let nok = [false];
+    let x = 0;
+    let y = 0;
+    let colision = true;
+    let position;
+    do{
+        do{
+            x = nombreAleatoire(txContainer);
+            y = nombreAleatoire(tyContainer);
+
+            for(let i = 0; i < serpent.length; i++){
+                if(serpent[i].x != x && serpent[i].y != y){
+                    nok.push(true);
+                }
+            }
+
+        }while(!nok.includes(true));
+        
+        position = {
+            x: x,
+            y: y,
+        };
+        colision = verifColitionSerpent(position.x, position.y, serpent);
+    }while(colision);
+
+    posiBouffe = position;
+    bouffe.style.left = x + "px";
+    bouffe.style.top = y + "px";
+}
+
+// On positionne une premiere fois la bouffe
+positionBouffe();
 
 
 /**
