@@ -22,12 +22,12 @@ afficherScore();
  * @param {taille actuel du serpent en nombre de block} nbSerpent 
  * @returns retourne l'objet créé
  */
-function creationDiv(id, longueur){
+function creationDiv(name, longueur){
     let maDiv = document.createElement("div");
-    maDiv.classList.add("serpent");
+    maDiv.classList.add(name);
     maDiv.style.width = taille + "px";
     maDiv.style.height = taille + "px";
-    maDiv.id = id+longueur;
+    maDiv.id = name+longueur;
     return maDiv;
 }
 
@@ -38,7 +38,7 @@ const bouffe = document.getElementById("bouffe");
  */
 function ajoutSerpent(direction){
     // On crée la div
-    let maDiv = creationDiv("serpent_", serpent.length);
+    let maDiv = creationDiv("serpent", serpent.length);
     let x = 0;
     let y = 0;
 
@@ -165,42 +165,44 @@ positionBouffe();
  * Fonction permetant de déplacer le serpent
  * @param {Valeur de la touche enfoncé} cle 
  */
-function deplacer(cle){
+function deplacer(cle, deplacer){
     let left = serpent[serpent.length - 1].x;
     let top = serpent[serpent.length - 1].y;
     let tempDiv = serpent[0].laDiv;
     let colition;
     let possible = false;
     
-    switch(cle){
-        case "ArrowLeft":
-            if(serpent[serpent.length - 1].x > 0){
-                left = serpent[serpent.length - 1].x - taille;
-                colition = verifColitionSerpent(left, top, serpent);
-                possible = true;
-            }
-            break;
-        case "ArrowUp":
-            if(serpent[serpent.length - 1].y > 0){
-                top = serpent[serpent.length - 1].y - taille;
-                colition = verifColitionSerpent(left, top, serpent);
-                possible = true;
-            }
-            break;
-        case "ArrowRight":
-            if((serpent[serpent.length - 1].x + (taille * 2)) < txContainer){
-                left = serpent[serpent.length - 1].x + taille;
-                colition = verifColitionSerpent(left, top, serpent);
-                possible = true;
-            }
-            break;
-        case "ArrowDown":
-            if((serpent[serpent.length - 1].y + (taille * 2)) < tyContainer){
-                top = serpent[serpent.length - 1].y + taille;
-                colition = verifColitionSerpent(left, top, serpent);
-                possible = true;
-            }
-            break;
+    if(deplacer){
+        switch(cle){
+            case "ArrowLeft":
+                if(serpent[serpent.length - 1].x > 0){
+                    left = serpent[serpent.length - 1].x - taille;
+                    colition = verifColitionSerpent(left, top, serpent);
+                    possible = true;
+                }
+                break;
+            case "ArrowUp":
+                if(serpent[serpent.length - 1].y > 0){
+                    top = serpent[serpent.length - 1].y - taille;
+                    colition = verifColitionSerpent(left, top, serpent);
+                    possible = true;
+                }
+                break;
+            case "ArrowRight":
+                if((serpent[serpent.length - 1].x + (taille * 2)) < txContainer){
+                    left = serpent[serpent.length - 1].x + taille;
+                    colition = verifColitionSerpent(left, top, serpent);
+                    possible = true;
+                }
+                break;
+            case "ArrowDown":
+                if((serpent[serpent.length - 1].y + (taille * 2)) < tyContainer){
+                    top = serpent[serpent.length - 1].y + taille;
+                    colition = verifColitionSerpent(left, top, serpent);
+                    possible = true;
+                }
+                break;
+        }
     }
     
     if(!colition && possible){
@@ -228,16 +230,45 @@ function verifPossBouffe(positionBouf, positionSerpent, direction){
     let yBouffe = positionBouf.y;
     let xSerpent = positionSerpent[positionSerpent.length - 1].x;
     let ySerpent = positionSerpent[positionSerpent.length - 1].y;
+    let deplacer = true;
 
-    if(xBouffe == xSerpent && yBouffe == ySerpent){
+    switch (direction){
+        case "ArrowLeft":
+            if(xBouffe == xSerpent - taille && yBouffe == ySerpent){
+                ajoutSerpent(direction);
+                deplacer = false;
+            }
+            break;
+        case "ArrowUp":
+            if(yBouffe == ySerpent - taille && xBouffe == xSerpent){
+                ajoutSerpent(direction);
+                deplacer = false;
+            }
+            break;
+        case "ArrowRight":
+            if(xBouffe == xSerpent + taille && yBouffe == ySerpent){
+                ajoutSerpent(direction);
+                deplacer = false;
+            }
+            break;
+        case "ArrowDown":
+            if(yBouffe == ySerpent + taille && xBouffe == xSerpent){
+                ajoutSerpent(direction);
+                deplacer = false;
+            }
+            break;
+    }
+
+    if(xBouffe == serpent[serpent.length - 1].x && yBouffe == serpent[serpent.length - 1].y){
         afficherScore();
         positionBouffe();
-        ajoutSerpent(direction);
     }
+
+    return deplacer;
 }
 
 // On detecte quand une touche est enfoncé
 document.addEventListener("keydown", function(e){
-    deplacer(e.key);
-    verifPossBouffe(posiBouffe, serpent, e.key);
+    deplacer(e.key, verifPossBouffe(posiBouffe, serpent, e.key));
+    //verifPossBouffe(posiBouffe, serpent, e.key);
 });
