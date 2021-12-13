@@ -3,13 +3,18 @@ body{
     position: relative;
 }
 
-p{
+header h1{
+    text-align: center;
+}
+
+main p{
     margin: 10px;
+    font-size: 1.3em;
 }
 
 #container{
     width: 90%;
-    height: 90vh;
+    height: 82vh;
     position: relative;
     margin: 0 auto;
     border: 1px solid black;
@@ -23,4 +28,9 @@ p{
 #bouffe{
     background: red;
     position: absolute;
+}
+
+footer p{
+    text-align: center;
+    font-size: 0.8em;
 }
