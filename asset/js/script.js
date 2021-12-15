@@ -211,9 +211,11 @@ function deplacer(cle, deplacer){
     }
     
     if(!colition && possible){
+        // On deplace la l'index 0 au dernier index du tableau serpent
         serpent.push({x: left, y: top, laDiv: tempDiv});
         serpent.shift();
 
+        // On positionne le serpent déplacer
         for(let i = 0; i < serpent.length; i++){
             let leX = serpent[i].x;
             let leY = serpent[i].y;
@@ -222,10 +224,18 @@ function deplacer(cle, deplacer){
             leDiv.style.top = leY + "px";
         }
 
+        // On met la tete du serpent en vert
         for(let i = 0; i < serpent.length; i++){
             serpent[i].laDiv.classList.remove("vert");
         }
         serpent[serpent.length - 1].laDiv.classList.add("vert");
+    }
+    
+    // On ajoute la tete de mort, on affiche le score et on recharge la page si on ce mord
+    if(colition && possible){
+        document.getElementsByClassName("vert")[0].classList.add("mort");
+        alert("Vous venez de perdre car vous vous êtes manger.\nVotre score est de : " + score);
+        location.reload();
     }
 }
 
@@ -281,14 +291,14 @@ function verifPossBouffe(positionBouf, positionSerpent, direction){
 let start;
 
 /**
- * 
- * @param {dirction} direction 
+ * Fonction qui permet de faire avancer le serpent suivant un interval de temps
+ * @param {direction choisi} direction 
  */
 function avancer(direction){
     if(!start){
         start = setInterval(function(){
             deplacer(direction.key, verifPossBouffe(posiBouffe, serpent, direction.key));
-        }, 100);
+        }, 200);
     }
 }
 
@@ -296,8 +306,21 @@ function stop(){
     clearInterval(start);
     start = null;
 }
+
 // On detecte quand une touche est enfoncé
 document.addEventListener("keydown", function(e){
     stop();
     avancer(e);
+});
+
+/**
+ * On gére l'affichage de la fenettre d'info
+ */
+let info = document.getElementById("info");
+document.getElementById("bt-info").addEventListener("click", function(){
+    info.classList.toggle("hidden");
+});
+
+document.getElementsByClassName("fermeture")[0].addEventListener("click", function(){
+    info.classList.toggle("hidden");
 });

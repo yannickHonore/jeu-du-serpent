@@ -9,18 +9,30 @@
     <title>Jeu du serpent</title>
 </head>
 <body>
+    <div id="info" class="hidden">
+        <div>
+            <span class="fermeture">X</span>
+            <h1>Informations</h1>
+            <h2>Réglement</h2>
+            <p>Le but du jeu est de faire avancer le carré vert pour manger le carré rouge.<br>
+            Le serpent grandi à chaque fois que vous manger un carré rouge.<br>
+            Vous perdez quand vous vous manger.</p>
+            <h2>Déplacements</h2>
+            <p>Les déplacements ce font à l'aide des touches du pavé directionnel</p>
+        </div>
+    </div>
     <header>
         <h1>Jeu du serpent</h1>
     </header>
     <main>
         <div>
-            <p>Score : <span id="score"></span></p>
+            <p>Score : <span id="score"></span><button id="bt-info">Information</button></p>
         </div>
         <div id="container">
         </div>
     </main>
     <footer>
-        <p>Jeu du serpent réalisé en JavaScript dans le cadre de la formation webForce3.<br>
+        <p>Jeu du serpent réalisé en JavaScript dans le cadre de la formation developeur Web de webForce3.<br>
         Le code source du jeu est disponible sur mon <a href="https://github.com/yannickHonore/jeu-du-serpent">GitHub</a></p>
     </footer>
     <script src="./asset/js/script.js"></script>
