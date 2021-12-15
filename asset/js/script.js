@@ -81,6 +81,11 @@ function ajoutSerpent(direction){
     maDiv.style.left = x + "px";
     maDiv.style.top = y + "px";
 
+    // On met la class vert si le serpent fait qu'une case
+    if(serpent.length == 1){
+        maDiv.classList.add("vert");
+    }
+
     //On affiche la nouvelle case
     container.appendChild(maDiv);
 }
@@ -216,6 +221,11 @@ function deplacer(cle, deplacer){
             leDiv.style.left = leX + "px";
             leDiv.style.top = leY + "px";
         }
+
+        for(let i = 0; i < serpent.length; i++){
+            serpent[i].laDiv.classList.remove("vert");
+        }
+        serpent[serpent.length - 1].laDiv.classList.add("vert");
     }
 }
 
@@ -267,8 +277,27 @@ function verifPossBouffe(positionBouf, positionSerpent, direction){
     return deplacer;
 }
 
+// Variable qui contien la fonction setInterval
+let start;
+
+/**
+ * 
+ * @param {dirction} direction 
+ */
+function avancer(direction){
+    if(!start){
+        start = setInterval(function(){
+            deplacer(direction.key, verifPossBouffe(posiBouffe, serpent, direction.key));
+        }, 100);
+    }
+}
+
+function stop(){
+    clearInterval(start);
+    start = null;
+}
 // On detecte quand une touche est enfoncé
 document.addEventListener("keydown", function(e){
-    deplacer(e.key, verifPossBouffe(posiBouffe, serpent, e.key));
-    //verifPossBouffe(posiBouffe, serpent, e.key);
+    stop();
+    avancer(e);
 });
