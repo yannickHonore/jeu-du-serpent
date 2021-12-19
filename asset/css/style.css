@@ -65,17 +65,20 @@ main p{
 }
 
 .serpent{
-    background: blue;
+    background: rgb(101, 156, 73);
     position: absolute;
 }
 
 #bouffe{
-    background: red;
+    background: url(../images/souris.png);
+    background-size: 100%;
     position: absolute;
 }
 
-.vert{
-    background: green;
+.tete{
+    background: url(../images/serpent.png);
+    background-size: 100%;
+    transform: rotate(0deg);
 }
 
 .mort{

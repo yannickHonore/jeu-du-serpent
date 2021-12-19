@@ -2,6 +2,7 @@ const container = document.getElementById("container");
 let txContainer = container.offsetWidth;
 let tyContainer = container.offsetHeight;
 const taille = 50;
+const tailleMaxi = Math.floor(Math.floor(txContainer / taille) * Math.floor(tyContainer / taille));
 let score = -1;
 let serpent = [];
 let posiBouffe = {};
@@ -39,6 +40,7 @@ const bouffe = document.getElementById("bouffe");
 function ajoutSerpent(direction){
     // On crée la div
     let maDiv = creationDiv("serpent", serpent.length);
+    maDiv.style.borderRadius = taille / 2 +"px";
     let x = 0;
     let y = 0;
 
@@ -81,9 +83,9 @@ function ajoutSerpent(direction){
     maDiv.style.left = x + "px";
     maDiv.style.top = y + "px";
 
-    // On met la class vert si le serpent fait qu'une case
+    // On met la class tete si le serpent fait qu'une case
     if(serpent.length == 1){
-        maDiv.classList.add("vert");
+        maDiv.classList.add("tete");
     }
 
     //On affiche la nouvelle case
@@ -137,29 +139,35 @@ function positionBouffe(){
     let y = 0;
     let colision = true;
     let position;
-    do{
+    if(tailleMaxi > serpent.length){
         do{
-            x = nombreAleatoire(txContainer);
-            y = nombreAleatoire(tyContainer);
+            do{
+                x = nombreAleatoire(txContainer);
+                y = nombreAleatoire(tyContainer);
 
-            for(let i = 0; i < serpent.length; i++){
-                if(serpent[i].x != x && serpent[i].y != y){
-                    nok.push(true);
+                for(let i = 0; i < serpent.length; i++){
+                    if(serpent[i].x != x && serpent[i].y != y){
+                        nok.push(true);
+                    }
                 }
-            }
 
-        }while(!nok.includes(true));
-        
-        position = {
-            x: x,
-            y: y,
-        };
-        colision = verifColitionSerpent(position.x, position.y, serpent);
-    }while(colision);
+            }while(!nok.includes(true));
+            
+            position = {
+                x: x,
+                y: y,
+            };
+            colision = verifColitionSerpent(position.x, position.y, serpent);
+        }while(colision);
 
-    posiBouffe = position;
-    bouffe.style.left = x + "px";
-    bouffe.style.top = y + "px";
+        posiBouffe = position;
+        bouffe.style.left = x + "px";
+        bouffe.style.top = y + "px";
+    }
+    else{
+        alert("Vous avez gagné.\nVotre score est de : " + score);
+        location.reload();
+    }
 }
 
 // On positionne une premiere fois la bouffe
@@ -176,6 +184,7 @@ function deplacer(cle, deplacer){
     let tempDiv = serpent[0].laDiv;
     let colition;
     let possible = false;
+    let sensTete = 0;
     
     if(deplacer){
         switch(cle){
@@ -184,6 +193,7 @@ function deplacer(cle, deplacer){
                     left = serpent[serpent.length - 1].x - taille;
                     colition = verifColitionSerpent(left, top, serpent);
                     possible = true;
+                    sensTete = 90;
                 }
                 break;
             case "ArrowUp":
@@ -191,6 +201,7 @@ function deplacer(cle, deplacer){
                     top = serpent[serpent.length - 1].y - taille;
                     colition = verifColitionSerpent(left, top, serpent);
                     possible = true;
+                    sensTete = 180;
                 }
                 break;
             case "ArrowRight":
@@ -198,6 +209,7 @@ function deplacer(cle, deplacer){
                     left = serpent[serpent.length - 1].x + taille;
                     colition = verifColitionSerpent(left, top, serpent);
                     possible = true;
+                    sensTete = -90;
                 }
                 break;
             case "ArrowDown":
@@ -205,6 +217,7 @@ function deplacer(cle, deplacer){
                     top = serpent[serpent.length - 1].y + taille;
                     colition = verifColitionSerpent(left, top, serpent);
                     possible = true;
+                    sensTete = 0;
                 }
                 break;
         }
@@ -224,16 +237,17 @@ function deplacer(cle, deplacer){
             leDiv.style.top = leY + "px";
         }
 
-        // On met la tete du serpent en vert
+        // On met la tete du serpent en tete
         for(let i = 0; i < serpent.length; i++){
-            serpent[i].laDiv.classList.remove("vert");
+            serpent[i].laDiv.classList.remove("tete");
         }
-        serpent[serpent.length - 1].laDiv.classList.add("vert");
+        serpent[serpent.length - 1].laDiv.classList.add("tete");
+        serpent[serpent.length - 1].laDiv.style.transform = "rotate(" + sensTete + "deg)";
     }
     
     // On ajoute la tete de mort, on affiche le score et on recharge la page si on ce mord
     if(colition && possible){
-        document.getElementsByClassName("vert")[0].classList.add("mort");
+        document.getElementsByClassName("tete")[0].classList.add("mort");
         alert("Vous venez de perdre car vous vous êtes manger.\nVotre score est de : " + score);
         location.reload();
     }
