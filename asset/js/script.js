@@ -265,30 +265,35 @@ function verifPossBouffe(positionBouf, positionSerpent, direction){
     let xSerpent = positionSerpent[positionSerpent.length - 1].x;
     let ySerpent = positionSerpent[positionSerpent.length - 1].y;
     let deplacer = true;
+    let sensTete = 0;
 
     switch (direction){
         case "ArrowLeft":
             if(xBouffe == xSerpent - taille && yBouffe == ySerpent){
                 ajoutSerpent(direction);
                 deplacer = false;
+                sensTete = 90;
             }
             break;
         case "ArrowUp":
             if(yBouffe == ySerpent - taille && xBouffe == xSerpent){
                 ajoutSerpent(direction);
                 deplacer = false;
+                sensTete = 180;
             }
             break;
         case "ArrowRight":
             if(xBouffe == xSerpent + taille && yBouffe == ySerpent){
                 ajoutSerpent(direction);
                 deplacer = false;
+                sensTete = 270;
             }
             break;
         case "ArrowDown":
             if(yBouffe == ySerpent + taille && xBouffe == xSerpent){
                 ajoutSerpent(direction);
                 deplacer = false;
+                sensTete = 0;
             }
             break;
     }
@@ -296,6 +301,9 @@ function verifPossBouffe(positionBouf, positionSerpent, direction){
     if(xBouffe == serpent[serpent.length - 1].x && yBouffe == serpent[serpent.length - 1].y){
         afficherScore();
         positionBouffe();
+        document.getElementsByClassName("tete")[0].classList.remove("tete");
+        serpent[serpent.length - 1].laDiv.classList.add("tete");
+        serpent[serpent.length - 1].laDiv.style.transform = "rotate(" + sensTete + "deg)";
     }
 
     return deplacer;
