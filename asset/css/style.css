@@ -7,7 +7,7 @@ body{
     display: none;
 }
 
-#info{
+#info, #hi-score, #addScore{
     position: absolute;
     left: 50%;
     height: 100%;
@@ -15,7 +15,7 @@ body{
     z-index: 1000;
 }
 
-#info div{
+#info div, #hi-score div, #addScore div{
     position: relative;
     top: 50%;
     transform: translateY(-50%);
@@ -89,4 +89,12 @@ main p{
 footer p{
     text-align: center;
     font-size: 0.8em;
+}
+
+#hi-score, #hi-score th{
+    padding: 0.2em 2.5em;
+}
+
+#hi-score div table{
+    margin: auto;
 }

@@ -248,8 +248,11 @@ function deplacer(cle, deplacer){
     // On ajoute la tete de mort, on affiche le score et on recharge la page si on ce mord
     if(colition && possible){
         document.getElementsByClassName("tete")[0].classList.add("mort");
-        alert("Vous venez de perdre car vous vous êtes manger.\nVotre score est de : " + score);
-        location.reload();
+        document.getElementById("scoreFin").innerHTML = score;
+        let addScore = document.getElementById("addScore");
+        addScore.classList.remove("hidden");
+        let formAddScore = document.getElementById("formAddScore");
+        formAddScore.setAttribute("action", "addScore.php?score=" + score);
     }
 }
 
@@ -343,6 +346,18 @@ document.getElementById("bt-info").addEventListener("click", function(){
     info.classList.toggle("hidden");
 });
 
-document.getElementsByClassName("fermeture")[0].addEventListener("click", function(){
+document.getElementById("fermetureInfo").addEventListener("click", function(){
     info.classList.toggle("hidden");
+});
+
+/**
+ * On gére l'affichage des scores
+ */
+let hiScore = document.getElementById("hi-score");
+document.getElementById("bt-score").addEventListener("click", function(){
+    hiScore.classList.toggle("hidden");
+});
+
+document.getElementById("fermetureScore").addEventListener("click", function(){
+    hiScore.classList.toggle("hidden");
 });
